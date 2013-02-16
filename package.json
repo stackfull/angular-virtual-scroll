@@ -1,0 +1,14 @@
+{
+  "author": "Paul Thomas <paul@stackfull.com>",
+  "name": "angular-virtual-scroll",
+  "version": "0.1.0",
+  "dependencies": {
+  },
+  "devDependencies": {
+    "grunt": "0.3.x",
+    "docco":"0.4.x",
+    "grunt-docco":"0.1.x",
+    "bower": "0.7.x",
+    "grunt-bowerful": "0.1.x"
+  }
+}
