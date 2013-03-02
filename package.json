@@ -2,13 +2,20 @@
   "author": "Paul Thomas <paul@stackfull.com>",
   "name": "angular-virtual-scroll",
   "version": "0.1.0",
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
-    "grunt": "0.3.x",
-    "docco":"0.4.x",
-    "grunt-docco":"0.1.x",
-    "bower": "0.7.x",
-    "grunt-bowerful": "0.1.x"
+    "grunt": "*",
+    "docco": "*",
+    "grunt-docco": "*",
+    "bower": "*",
+    "grunt-bowerful": "*",
+    "testacular": "~0.6.0",
+    "grunt-contrib-jshint": "~0.2.0",
+    "grunt-contrib-concat": "~0.1.3",
+    "grunt-contrib-uglify": "~0.1.2",
+    "grunt-contrib-watch": "~0.3.1",
+    "grunt-contrib-connect": "~0.1.2",
+    "gruntacular": "~0.2.2",
+    "grunt-contrib-clean": "~0.4.0"
   }
 }
