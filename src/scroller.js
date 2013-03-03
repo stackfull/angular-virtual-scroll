@@ -56,11 +56,12 @@ mod.directive("sfScroller", function(){
       // so parent must create a new context for positioning.
       position: 'relative'
     });
-    var dummy = $('<div></div>').appendTo(element);
-    element.scroll(function(){
+    var dummy = angular.element('<div></div>');
+    element.append(dummy);
+    element.bind('scroll', function(){
       // When the user scrolls, push the new position into the ng world via
       // the `ng-model`.
-      var newTop = element.scrollTop();
+      var newTop = element.prop('scrollTop');
       if( attrs.ngModel ){
         scope.$apply(attrs.ngModel + ' = ' + newTop/HEIGHT_MULTIPLIER);
       }
@@ -68,17 +69,17 @@ mod.directive("sfScroller", function(){
     // Watch the values in the range expression
     scope.$watch(range.lower, function(newVal){
       lower = newVal;
-      dummy.css('height', (upper-lower)*HEIGHT_MULTIPLIER);
+      dummy.css('height', (upper-lower)*HEIGHT_MULTIPLIER+'px');
     });
     scope.$watch(range.upper, function(newVal){
       upper = newVal;
-      dummy.css('height', (upper-lower)*HEIGHT_MULTIPLIER);
+      dummy.css('height', (upper-lower)*HEIGHT_MULTIPLIER+'px');
     });
     // and make the position a 2-way binding
     scope.$watch(attrs.ngModel, function(newVal){
       var scrollTop = newVal * HEIGHT_MULTIPLIER;
-      if( element.scrollTop() !== scrollTop ){
-        element.scrollTop(scrollTop);
+      if( element.prop('scrollTop') !== scrollTop ){
+        element.prop('scrollTop'. scrollTop);
       }
     });
   };
