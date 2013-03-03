@@ -43,9 +43,11 @@
     //
     function setViewportCss(viewport){
       var viewportCss = {'overflow': 'auto'},
-      style = window.getComputedStyle ? window.getComputedStyle(viewport[0]) : viewport.currentStyle,
-      maxHeight = style && style.getPropertyValue('max-height'),
-      height = style && style.getPropertyValue('height');
+          style = window.getComputedStyle ?
+            window.getComputedStyle(viewport[0]) :
+            viewport[0].currentStyle,
+          maxHeight = style && style.getPropertyValue('max-height'),
+          height = style && style.getPropertyValue('height');
 
       if( maxHeight && maxHeight !== '0px' ){
         viewportCss.maxHeight = maxHeight;
@@ -73,8 +75,8 @@
 
     function computeRowHeight(element){
       var style = window.getComputedStyle ? window.getComputedStyle(element) : element.currentStyle,
-      maxHeight = style && style.getPropertyValue('max-height'),
-      height = style && style.getPropertyValue('height');
+          maxHeight = style && style.getPropertyValue('max-height'),
+          height = style && style.getPropertyValue('height');
 
       if( height && height !== '0px' ){
         $log.info('Row height is "%s" from css height', height);
@@ -96,8 +98,10 @@
     // is exculsively ours.
     function sfVirtualRepeatCompile(element, attr, linker) {
       var ident = parseRepeatExpression(attr.sfVirtualRepeat),
-      content = element.parent(),
-      viewport = content.parent(); //TODO: clever viewport finder
+          LOW_WATER = 100,
+          HIGH_WATER = 200,
+          content = element.parent(),
+          viewport = content.parent(); //TODO: clever viewport finder
 
       setViewportCss(viewport);
       setContentCss(content);
@@ -138,6 +142,7 @@
         var coll = scope.$eval(ident.collection);
         var rendered = [];
         var rowHeight = 0;
+        var visibleRows = 0;
         // The list structure is controlled by a few simple state variables
         var active = {
           // The index of the first active element
@@ -161,13 +166,22 @@
 
         function sfVirtualRepeatOnScroll(evt){
           var top = evt.target.scrollTop,
-          firstVisibleRow = Math.floor(top / rowHeight);
-          $log.log('scroll to row %o', firstVisibleRow);
+              firstVisibleRow = Math.floor(top / rowHeight),
+              start = Math.max(0,
+                Math.min(firstVisibleRow - LOW_WATER,
+                  Math.max(firstVisibleRow - HIGH_WATER, active.start))),
+              end;
+          visibleRows = Math.ceil(viewport[0].clientHeight / rowHeight);
+          end = Math.min(
+            active.len,
+            Math.max(firstVisibleRow + visibleRows + LOW_WATER,
+                     active.start + active.active));
+          $log.log('scroll to row %d (show %d - %d)', firstVisibleRow, start, end);
           // Enter the angular world for the state change to take effect.
           scope.$apply(function(){
             active = {
-              start: firstVisibleRow,
-              active: active.active,
+              start: start,
+              active: end - start,
               len: active.len
             };
           });
@@ -207,34 +221,40 @@
             rowHeight = computeRowHeight(newElements[0][0]);
             content.css({'height': newValue.len * rowHeight + 'px'});
           }else{
+            var newEnd = newValue.start + newValue.active;
             var forward = newValue.start > oldValue.start;
             var delta = forward ? newValue.start - oldValue.start
                                 : oldValue.start - newValue.start;
+            var endDelta = newEnd >= oldEnd ? newEnd - oldEnd : oldEnd - newEnd;
             var contiguous = delta < (forward ? oldValue.active : newValue.active);
-            var newEnd = newValue.start + newValue.active;
-            $log.info('change by %d rows %s', delta, forward ? 'forward' : 'backward');
+            $log.info('change by %d,%d rows %s', delta, endDelta, forward ? 'forward' : 'backward');
             if( !contiguous ){
               $log.info('non-contiguous change');
               destroyActiveElements('pop', rendered.length);
               rendered = addElements(newValue.start, newEnd, collection, scope, iterStartElement);
             }else{
               if( forward ){
-                $log.info('need to remove from the top and add to the bottom');
-                var lastElement = rendered[rendered.length-1];
+                $log.info('need to remove from the top');
                 destroyActiveElements('shift', delta);
-                newElements = addElements(
-                  oldEnd,
-                  newEnd,
-                  collection, scope, lastElement);
-                rendered = rendered.concat(newElements);
-              } else if( delta ){
-                $log.info('need to add at the top and remove from the bottom');
-                destroyActiveElements('pop', oldEnd - newEnd);
+              }else if( delta ){
+                $log.info('need to add at the top');
                 newElements = addElements(
                   newValue.start,
                   oldValue.start,
                   collection, scope, iterStartElement);
                 rendered = newElements.concat(rendered);
+              }
+              if( newEnd < oldEnd ){
+                $log.info('need to remove from the bottom');
+                destroyActiveElements('pop', oldEnd - newEnd);
+              }else if( endDelta ){
+                var lastElement = rendered[rendered.length-1];
+                $log.info('need to add to the bottom');
+                newElements = addElements(
+                  oldEnd,
+                  newEnd,
+                  collection, scope, lastElement);
+                rendered = rendered.concat(newElements);
               }
             }
             content.css({'padding-top': newValue.start * rowHeight + 'px'});
