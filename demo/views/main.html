@@ -16,4 +16,12 @@
       </li>
     </ul>
   </div>
+  <h4>Virtual</h4>
+  <div class="viewport virtual">
+    <ul id="virtual">
+      <li sf-virtual-repeat="thing in awesomeThings" ng-init="theStyle={'padding-left':$index+'px' }">
+      <b>+</b><span ng-style="theStyle">{{thing}}</span>
+      </li>
+    </ul>
+  </div>
 </div>
