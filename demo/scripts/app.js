@@ -1,15 +1,19 @@
 (function(){
 'use strict';
 
-var virtualScrollingApp = angular.module('virtualScrollingApp', ['sf.virtualScroll'])
+angular.module('virtualScrollingApp', ['sf.virtualScroll'])
   .config(['$routeProvider', function($routeProvider) {
     $routeProvider
-      .when('/', {
+      .when('/comparison', {
         templateUrl: 'views/main.html',
         controller: 'MainCtrl'
       })
+      .when('/nested', {
+        templateUrl: 'views/nested.html',
+        controller: 'NestedCtrl'
+      })
       .otherwise({
-        redirectTo: '/'
+        redirectTo: '/comparison'
       });
   }]);
 

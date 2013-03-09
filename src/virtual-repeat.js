@@ -99,12 +99,7 @@
     function sfVirtualRepeatCompile(element, attr, linker) {
       var ident = parseRepeatExpression(attr.sfVirtualRepeat),
           LOW_WATER = 100,
-          HIGH_WATER = 200,
-          content = element.parent(),
-          viewport = content.parent(); //TODO: clever viewport finder
-
-      setViewportCss(viewport);
-      setContentCss(content);
+          HIGH_WATER = 200;
 
       return {
         post: sfVirtualRepeatPostLink
@@ -152,7 +147,12 @@
           // The total number of elements
           len: coll.length
         };
+        var content = iterStartElement.parent();
 
+        var viewport = content.parent(); //TODO: clever viewport finder
+
+        setContentCss(content);
+        setViewportCss(viewport);
         // When the user scrolls, we move the active.start
         viewport.bind('scroll', sfVirtualRepeatOnScroll);
 
