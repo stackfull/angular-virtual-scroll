@@ -2,5 +2,4 @@
 .DS_Store
 components/
 node_modules/
-dist/
 docs/
