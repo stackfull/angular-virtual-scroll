@@ -73,6 +73,7 @@
       content.css(contentCss);
     }
 
+    // TODO: compute outerHeight (padding + border unless box-sizing is border)
     function computeRowHeight(element){
       var style = window.getComputedStyle ? window.getComputedStyle(element) : element.currentStyle,
           maxHeight = style && style.getPropertyValue('max-height'),
@@ -105,29 +106,6 @@
         post: sfVirtualRepeatPostLink
       };
       // ----
-
-      function makeNewScope (idx, collection, containerScope) {
-        var childScope = containerScope.$new();
-        childScope[ident.value] = collection[idx];
-        childScope.$index = idx;
-        childScope.$first = (idx === 0);
-        childScope.$last = (idx === (collection.length - 1));
-        childScope.$middle = !(childScope.$first || childScope.$last);
-        return childScope;
-      }
-
-      function addElements (start, end, collection, containerScope, insPoint) {
-        var frag = document.createDocumentFragment();
-        var newElements = [], element, idx, childScope;
-        for( idx = start; idx !== end; idx ++ ){
-          childScope = makeNewScope(idx, collection, containerScope);
-          element = linker(childScope, angular.noop);
-          newElements.push(element);
-          frag.appendChild(element[0]);
-        }
-        insPoint.after(frag);
-        return newElements;
-      }
 
       // Set up the initial value for our watch expression (which is just the
       // start and length of the active rows and the collection length) and
@@ -164,6 +142,45 @@
         return;
         // ----
 
+        // Apply explicit styles to the item element
+        function setElementCss (element) {
+          var elementCss = {
+            display: 'block',
+            margin: '0'
+          };
+          if( rowHeight ){
+            elementCss.height = rowHeight+'px';
+          }
+          element.css(elementCss);
+        }
+
+        function makeNewScope (idx, collection, containerScope) {
+          var childScope = containerScope.$new();
+          childScope[ident.value] = coll[idx];
+          childScope.$index = idx;
+          childScope.$first = (idx === 0);
+          childScope.$last = (idx === (coll.length - 1));
+          childScope.$middle = !(childScope.$first || childScope.$last);
+          childScope.$watch(function updateChildScopeItem(){
+            childScope[ident.value] = coll[idx];
+          });
+          return childScope;
+        }
+
+        function addElements (start, end, collection, containerScope, insPoint) {
+          var frag = document.createDocumentFragment();
+          var newElements = [], element, idx, childScope;
+          for( idx = start; idx !== end; idx ++ ){
+            childScope = makeNewScope(idx, collection, containerScope);
+            element = linker(childScope, angular.noop);
+            setElementCss(element);
+            newElements.push(element);
+            frag.appendChild(element[0]);
+          }
+          insPoint.after(frag);
+          return newElements;
+        }
+
         function sfVirtualRepeatOnScroll(evt){
           var top = evt.target.scrollTop,
               firstVisibleRow = Math.floor(top / rowHeight),
@@ -175,7 +192,8 @@
           end = Math.min(
             active.len,
             Math.max(firstVisibleRow + visibleRows + LOW_WATER,
-                     active.start + active.active));
+               Math.min(firstVisibleRow + visibleRows + HIGH_WATER,
+                        active.start + active.active)));
           $log.log('scroll to row %d (show %d - %d)', firstVisibleRow, start, end);
           // Enter the angular world for the state change to take effect.
           scope.$apply(function(){
@@ -188,7 +206,7 @@
         }
 
         function sfVirtualRepeatWatchExpression(/*scope*/){
-          // TODO: should we re-$eval the collection here?
+          coll = scope.$eval(ident.collection);
           if( coll.length !== active.len ){
             active = {
               start: active.start,
@@ -219,7 +237,6 @@
             newElements = addElements(newValue.start, oldEnd, collection, scope, iterStartElement);
             rendered = newElements;
             rowHeight = computeRowHeight(newElements[0][0]);
-            content.css({'height': newValue.len * rowHeight + 'px'});
           }else{
             var newEnd = newValue.start + newValue.active;
             var forward = newValue.start > oldValue.start;
@@ -259,6 +276,7 @@
             }
             content.css({'padding-top': newValue.start * rowHeight + 'px'});
           }
+          content.css({'height': newValue.len * rowHeight + 'px'});
         }
       }
     }

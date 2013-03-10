@@ -12,6 +12,10 @@ angular.module('virtualScrollingApp', ['sf.virtualScroll'])
         templateUrl: 'views/nested.html',
         controller: 'NestedCtrl'
       })
+      .when('/twocities', {
+        templateUrl: 'views/biglist.html',
+        controller: 'BigListCtrl'
+      })
       .otherwise({
         redirectTo: '/comparison'
       });
