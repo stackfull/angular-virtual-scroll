@@ -7,7 +7,8 @@ module.exports = function( grunt ) {
   var DISTSOURCES = [
     'src/module.js',
     'src/sublist.js',
-    'src/scroller.js'
+    'src/scroller.js',
+    'src/virtual-repeat.js'
   ];
   var DISTDIR = 'dist';
 
