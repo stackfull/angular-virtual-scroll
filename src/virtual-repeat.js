@@ -63,7 +63,6 @@
     //
     function setContentCss(content){
       var contentCss = {
-        overflow: 'hidden',
         width:'auto',
         margin: 0,
         padding: 0,
