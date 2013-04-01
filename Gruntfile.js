@@ -138,6 +138,7 @@ module.exports = function( grunt ) {
         jquery: "1.9.x",
         json3: "3.2.x",
         "es5-shim": "2.0.x",
+        "bootstrap.css": "2.1.1",
         "jasmine-jquery": "1.x"
       }
     },
