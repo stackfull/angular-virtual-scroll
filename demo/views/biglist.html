@@ -1,8 +1,10 @@
 <div>
+  <p>That's right, a big list
   <h4>{{book.title}}</h4>
   <div class="viewport virtual">
     <div>
       <p sf-virtual-repeat="line in book.lines">{{line}}
     </div>
   </div>
+  <pre>{{book.lines.length}} lines.</pre>
 </div>
