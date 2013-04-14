@@ -11,13 +11,42 @@ module.exports = function( grunt ) {
     'src/virtual-repeat.js'
   ];
   var DISTDIR = 'dist';
+  var TASK_IMPORTS = [
+    'grunt-contrib-concat',
+    'grunt-contrib-uglify',
+    'grunt-contrib-jshint',
+    'grunt-contrib-watch',
+    'grunt-contrib-connect',
+    'grunt-contrib-copy',
+    'grunt-contrib-clean',
+    'grunt-docco',
+    'grunt-bowerful',
+    'gruntacular'
+  ];
+
 
   grunt.initConfig({
 
     pkg: grunt.file.readJSON('package.json'),
 
     clean: {
-      dist: [DISTDIR]
+      dist: [DISTDIR],
+      site: ['site']
+    },
+
+    copy: {
+      demo: {
+        expand: true,
+        cwd: 'demo/',
+        src: ['**/*'],
+        dest: 'site/'
+      },
+      concat: {
+        expand: true,
+        flatten: true,
+        src: [ '<%= concat.dist.dest %>' ],
+        dest: 'site/components/angular-virtual-scroll/'
+      }
     },
 
     concat: {
@@ -131,23 +160,25 @@ module.exports = function( grunt ) {
     },
 
     bowerful: {
-      store: 'components',
+      site: {
+        directory: 'site/components',
 
-      packages: {
-        'angular-complete': "1.0.x",
-        jquery: "1.9.x",
-        json3: "3.2.x",
-        "es5-shim": "2.0.x",
-        "bootstrap.css": "2.1.1",
-        "jasmine-jquery": "1.x"
+        packages: {
+          'angular-complete': "1.0.x",
+          jquery: "1.9.x",
+          json3: "3.2.x",
+          "es5-shim": "2.0.x",
+          "bootstrap.css": "2.1.1",
+          "jasmine-jquery": "1.x"
+        }
       }
     },
 
     connect: {
-      demo: {
+      site: {
         options: {
           port: 8000,
-          base: '.'
+          base: 'site'
         }
       },
       docs: {
@@ -161,11 +192,11 @@ module.exports = function( grunt ) {
     watch: {
       sources: {
         files: SOURCES,
-        tasks: ['doc', 'jshint:source', 'test']
+        tasks: ['doc', 'jshint:source', 'test', 'concat', 'copy:concat']
       },
       demo: {
-        files: DEMOSOURCES,
-        tasks: ['jshint:source']
+        files: ['demo/**/*'],
+        tasks: ['jshint:source', 'copy:demo']
       },
       tests: {
         files: TESTSOURCES,
@@ -179,17 +210,10 @@ module.exports = function( grunt ) {
 
   });
 
-  grunt.loadNpmTasks('grunt-contrib-concat');
-  grunt.loadNpmTasks('grunt-contrib-uglify');
-  grunt.loadNpmTasks('grunt-contrib-jshint');
-  grunt.loadNpmTasks('grunt-contrib-watch');
-  grunt.loadNpmTasks('grunt-contrib-connect');
-  grunt.loadNpmTasks('grunt-contrib-clean');
-  grunt.loadNpmTasks('grunt-docco');
-  grunt.loadNpmTasks('grunt-bowerful');
-  grunt.loadNpmTasks('gruntacular');
+  TASK_IMPORTS.forEach(grunt.loadNpmTasks);
 
-  grunt.registerTask('default', ['jshint', 'doc', 'watch']);
+  grunt.registerTask('default',
+                     ['jshint', 'doc', 'watch']);
 
   grunt.registerTask('dist', ['jshint', 'doc', 'concat', 'min']);
 
@@ -197,7 +221,9 @@ module.exports = function( grunt ) {
   grunt.registerTask('min', ['uglify']);
   grunt.registerTask('test', ['testacular:unit']);
 
-  grunt.registerTask('demo', ['bowerful', 'connect:demo', 'watch']);
+  // 'demo' task - stage demo system into 'site' and watch for source changes
+  grunt.registerTask('build-site', ['bowerful', 'copy:demo', 'concat', 'copy:concat']);
+  grunt.registerTask('demo', ['clean:site', 'build-site', 'connect:site', 'watch']);
 
   var shell = require('shelljs');
   var semver = require('semver');
@@ -248,7 +274,7 @@ module.exports = function( grunt ) {
     grunt.log.ok("DON'T FORGET TO PUSH BOTH!");
   });
 
-  grunt.registerTask('release', 'build and push to the bower component repo', 
+  grunt.registerTask('release', 'build and push to the bower component repo',
                      ['release-prepare', 'dist', 'release-commit']);
- 
+
 };

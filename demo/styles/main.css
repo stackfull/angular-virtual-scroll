@@ -2,10 +2,10 @@
   max-height: 100px;
   border: 1px solid blue;
 }
-li{
+.viewport li{
   background: #eee;
 }
-li:nth-child(even){
+.viewport li:nth-child(even){
   background: #ccc;
 }
 

@@ -7,7 +7,7 @@
     };
     $http({
       method: 'GET',
-      url: '/demo/data/tale-of-two-cities.txt'
+      url: '/data/tale-of-two-cities.txt'
     }).success(function(data){
       $scope.book.title = "Tale of Two Cities";
       $scope.book.lines = data.split('\n');

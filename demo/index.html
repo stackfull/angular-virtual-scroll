@@ -10,7 +10,7 @@
   <meta name="description" content="Demo for sf.virtualScroll"/>
   <meta name="viewport" content="width=device-width"/>
   <link rel="stylesheet" href="/components/bootstrap.css/css/bootstrap.css"/>
-  <link rel="stylesheet" href="styles/main.css"/>
+  <link rel="stylesheet" href="/styles/main.css"/>
 
 </head>
 <body ng-app="virtualScrollingApp">
@@ -33,24 +33,20 @@
         <a href="#{{demo.path}}" >{{demo.title}}</a>
         </li>
       </ul>
-      
     </div>
   </div>
   <!-- Add your site or application content here -->
   <div class="container" ng-view></div>
 
   <script src="/components/angular-complete/angular.js"></script>
+  <script src="/components/angular-virtual-scroll/angular-virtual-scroll.js"></script>
 
   <!-- build:js scripts/scripts.js -->
-  <script src="/src/module.js"></script>
-  <script src="/src/sublist.js"></script>
-  <script src="/src/scroller.js"></script>
-  <script src="/src/virtual-repeat.js"></script>
-  <script src="/demo/scripts/app.js"></script>
-  <script src="/demo/scripts/controllers/comparison.js"></script>
-  <script src="/demo/scripts/controllers/nested.js"></script>
-  <script src="/demo/scripts/controllers/biglist.js"></script>
-  <script src="/demo/scripts/controllers/autoscroll.js"></script>
+  <script src="/scripts/app.js"></script>
+  <script src="/scripts/controllers/comparison.js"></script>
+  <script src="/scripts/controllers/nested.js"></script>
+  <script src="/scripts/controllers/biglist.js"></script>
+  <script src="/scripts/controllers/autoscroll.js"></script>
   <!-- endbuild -->
 
 </body>
