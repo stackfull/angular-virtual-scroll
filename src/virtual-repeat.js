@@ -124,6 +124,7 @@
           // The total number of elements
           len: coll.length
         };
+        var sticky = false;
         var content = iterStartElement.parent();
 
         var viewport = content.parent(); //TODO: clever viewport finder
@@ -193,14 +194,17 @@
             Math.max(firstVisibleRow + visibleRows + LOW_WATER,
                Math.min(firstVisibleRow + visibleRows + HIGH_WATER,
                         active.start + active.active)));
-          $log.log('scroll to row %d (show %d - %d)', firstVisibleRow, start, end);
+          $log.log('scroll to row %o (show %o - %o)', firstVisibleRow, start, end);
           // Enter the angular world for the state change to take effect.
           scope.$apply(function(){
+            sticky = evt.target.scrollTop + evt.target.clientHeight >= evt.target.scrollHeight;
             active = {
               start: start,
               active: end - start,
               len: active.len
             };
+            $log.log('active is now %o', active);
+            $log.log('sticky = %o', sticky);
           });
         }
 
@@ -243,7 +247,7 @@
                                 : oldValue.start - newValue.start;
             var endDelta = newEnd >= oldEnd ? newEnd - oldEnd : oldEnd - newEnd;
             var contiguous = delta < (forward ? oldValue.active : newValue.active);
-            $log.info('change by %d,%d rows %s', delta, endDelta, forward ? 'forward' : 'backward');
+            $log.info('change by %o,%o rows %s', delta, endDelta, forward ? 'forward' : 'backward');
             if( !contiguous ){
               $log.info('non-contiguous change');
               destroyActiveElements('pop', rendered.length);
@@ -276,6 +280,9 @@
             content.css({'padding-top': newValue.start * rowHeight + 'px'});
           }
           content.css({'height': newValue.len * rowHeight + 'px'});
+          if( sticky ){
+            viewport[0].scrollTop = viewport[0].clientHeight + viewport[0].scrollHeight;
+          }
         }
       }
     }
