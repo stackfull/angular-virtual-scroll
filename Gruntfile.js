@@ -192,7 +192,7 @@ module.exports = function( grunt ) {
     watch: {
       sources: {
         files: SOURCES,
-        tasks: ['doc', 'jshint:source', 'test', 'concat', 'copy:concat']
+        tasks: ['jshint:source', 'concat', 'copy:concat']
       },
       demo: {
         files: ['demo/**/*'],
@@ -215,7 +215,7 @@ module.exports = function( grunt ) {
   grunt.registerTask('default',
                      ['jshint', 'doc', 'watch']);
 
-  grunt.registerTask('dist', ['jshint', 'doc', 'concat', 'min']);
+  grunt.registerTask('dist', ['jshint', 'concat', 'min']);
 
   grunt.registerTask('doc', ['docco']);
   grunt.registerTask('min', ['uglify']);
