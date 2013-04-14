@@ -2,7 +2,7 @@
   'use strict';
 
   var DEMOS = [];
-  angular.forEach(['comparison', 'nested', 'big list', 'auto scroll'], function(demo){
+  angular.forEach(['comparison', 'nested', 'big list', 'auto scroll', 'rotating'], function(demo){
     var title = demo.replace(/\w\S*/g, function(txt){
       return txt.charAt(0).toUpperCase() + txt.substr(1);
     });
