@@ -10,11 +10,16 @@ The current version doesn't contain the full-featured repeat directive. It is be
 Developing
 ----------
 
+[Grunt](http://gruntjs.com/) is used as the build tool, so you will need [node](http://nodejs.org/) and [npm](https://npmjs.org/) installed. Since v0.4, grunt has 2 parts: the heavy lifting package `grunt` and the shell command `grunt-cli`. If you haven't already installed `grunt-cli` globally, do so now with:
+
+    sudo npm install -g grunt-cli
+
 To run the simple demo, install the npm dependencies for the build tools and go:
 
     npm install
-    ./node_modules/.bin/grunt demo
-    open http://localhost:8000/demo/
+    grunt demo
+
+You can now view the demo at http://localhost:8000/
 
 Build with `grunt dist` and choose a file from the `dist` directory.
 
