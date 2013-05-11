@@ -99,7 +99,7 @@ module.exports = function( grunt ) {
         options: {node:true}
       },
       source: {
-        src: SOURCES + DEMOSOURCES,
+        src: SOURCES.concat(DEMOSOURCES),
         options: {
           globals: {
             angular: true
@@ -212,8 +212,7 @@ module.exports = function( grunt ) {
 
   TASK_IMPORTS.forEach(grunt.loadNpmTasks);
 
-  grunt.registerTask('default',
-                     ['jshint', 'doc', 'watch']);
+  grunt.registerTask('default', ['jshint', 'doc']);
 
   grunt.registerTask('dist', ['jshint', 'concat', 'min']);
 

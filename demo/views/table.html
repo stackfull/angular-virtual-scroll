@@ -1,0 +1,21 @@
+<div>
+  <p>Constructing Tables.
+  <h4>Log Messages</h4>
+  <div class="viewport virtual">
+    <table class="table">
+      <tr sf-virtual-repeat="msg in log.msgs">
+        <td class="time">{{msg.time|date:'mediumTime'}}
+        <td class="message">{{msg.message}}
+      </tr>
+    </table>
+  </div>
+  <div class="well">
+    <form class="form-inline">
+      <div class="input-append">
+        <input type="text" placeholder="Type a Message" ng-model="message"/>
+        <button type="submit" class="btn btn-primary" ng-click="logit()">Log It!</button>
+      </div>
+    </form>
+  </div>
+</div>
+

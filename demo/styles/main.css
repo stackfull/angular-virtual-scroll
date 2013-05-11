@@ -1,6 +1,10 @@
-.viewport{
-  max-height: 100px;
+.viewport {
+  white-space: nowrap;
+  max-height: 300px;
   border: 1px solid blue;
+}
+.viewport.real,.viewport.slice,.viewport.virtual{
+  max-height: 100px;
 }
 .viewport li{
   background: #eee;
@@ -16,4 +20,12 @@
   margin: 0;
   padding: 0;
   list-style: none;
+}
+
+td {
+  font: 12px monospace;
+  line-height: 1em;
+}
+td.time {
+  width: 7em;
 }

@@ -1,0 +1,33 @@
+<div>
+  <p>State variables exposed via <code>ng-model</code>
+  <a href='' class="btn btn-primary pull-right" ng-click="load()">Load Book</a>
+  <h4><span ng-hide="book.title">no book loaded</span>{{book.title}}</h4>
+  <div class="row-fluid">
+    <div class="span6">
+      <div class="viewport">
+        <div>
+          <p sf-virtual-repeat="line in book.lines" ng-model="scrollModel">{{line}}
+        </div>
+      </div>
+      <pre>{{book.lines.length}} lines.</pre>
+    </div>
+    <div class="span6">
+      <table class="table">
+        <tr>
+          <th>First Active Row: <td>{{scrollModel.firstActive}}
+        <tr>
+          <th>First Visible Row: <td>{{scrollModel.firstVisible}}
+        <tr>
+          <th>Last Visible Row: <td>{{scrollModel.firstVisible + scrollModel.visible}}
+        <tr>
+          <th>Last Active Row: <td>{{scrollModel.firstActive + scrollModel.active}}
+        <tr>
+          <th>Visible Rows: <td>{{scrollModel.visible}}
+        <tr>
+          <th>Active Rows: <td>{{scrollModel.active}}
+        <tr>
+          <th>Total Rows: <td>{{scrollModel.total}}
+      </table>
+  </div>
+  </div>
+</div>
