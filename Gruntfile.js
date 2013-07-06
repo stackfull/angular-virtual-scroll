@@ -19,7 +19,6 @@ module.exports = function( grunt ) {
     'grunt-contrib-connect',
     'grunt-contrib-copy',
     'grunt-contrib-clean',
-    'grunt-docco',
     'grunt-bowerful',
     'gruntacular'
   ];
@@ -155,7 +154,10 @@ module.exports = function( grunt ) {
     docco: {
       virtualScroll: {
         src: SOURCES,
-        dest: 'docs/'
+        dest: 'docs/',
+        options: {
+          layout: "parallel"
+        }
       }
     },
 
@@ -276,4 +278,20 @@ module.exports = function( grunt ) {
   grunt.registerTask('release', 'build and push to the bower component repo',
                      ['release-prepare', 'dist', 'release-commit']);
 
+  var docco = require('docco');
+
+  grunt.registerMultiTask('docco', 'Docco processor.', function() {
+      var task = this,
+      fdone = 0,
+      flength = this.files.length,
+      done = this.async();
+
+      this.files.forEach(function(file) {
+        docco.document(task.options({ output: file.dest, args: file.src }), function(){
+          if(++fdone === flength){
+            done();
+          }
+        });
+      });
+    });
 };

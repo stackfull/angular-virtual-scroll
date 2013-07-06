@@ -5,8 +5,7 @@
   "dependencies": {},
   "devDependencies": {
     "grunt": "~0.4.0",
-    "docco": "~0.6.2",
-    "grunt-docco": "~0.2.0",
+    "docco": "git://github.com/jashkenas/docco.git#master",
     "bower": "~0.8.6",
     "grunt-bowerful": "0.2.2",
     "karma": "~0.8.5",
