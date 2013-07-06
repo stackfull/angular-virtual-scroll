@@ -17,5 +17,26 @@
       </div>
     </form>
   </div>
+
+  <!-- Structure adapted from a problem plunk - http://plnkr.co/edit/e4s5dXzr0QsdOh1u9hOd -->
+  <div class="viewport">
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Time</th>
+        <th>Message</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr sf-virtual-repeat="msg in log.msgs">
+        <td class="time">{{msg.time|date:'mediumTime'}}
+        <td class="message">{{msg.message}}
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<hr>
+
 </div>
 

@@ -9,6 +9,7 @@
   // (part of the sf.virtualScroll module).
   var mod = angular.module('sf.virtualScroll');
   var DONT_WORK_AS_VIEWPORTS = ['TABLE', 'TBODY', 'THEAD', 'TR', 'TFOOT'];
+  var DONT_SET_DISPLAY_BLOCK = ['TABLE', 'TBODY', 'THEAD', 'TR', 'TFOOT'];
 
   // Utility to clip to range
   function clip(value, min, max){
@@ -47,25 +48,39 @@
       };
     }
 
-    // Utility to find the viewport element given the start element
+    // Utility to filter out elements by tag name
+    function isTagNameInList(element, list){
+      var t, tag = element.tagName.toUpperCase();
+      for( t = 0; t < list.length; t++ ){
+        if( list[t] === tag ){
+         return true;
+        }
+      }
+      return false;
+    }
+
+
+    // Utility to find the viewport element given the start element:
     function findViewport(startElement){
       /*jshint eqeqeq:false, curly:false */
       var root = $rootElement[0];
-      var e, n, t, tag;
+      var e, n;
+      // Somewhere between the grandparent and the root node
       for( e = startElement.parent().parent()[0]; e !== root; e = e.parentNode ){
+        // is an element
         if( e.nodeType != 1 ) break;
-        tag = e.tagName.toUpperCase();
-        for( t = 0; t < DONT_WORK_AS_VIEWPORTS.length; t++ ){
-          if( DONT_WORK_AS_VIEWPORTS[t] === tag ) break;
-        }
-        if( t < DONT_WORK_AS_VIEWPORTS.length ) continue;
+        // that isn't in the blacklist (tables etc.),
+        if( isTagNameInList(e, DONT_WORK_AS_VIEWPORTS) ) continue;
+        // has a single child element (the content),
         if( e.childElementCount != 1 ) continue;
+        // and no text.
         for( n = e.firstChild; n; n = n.nextSibling ){
           if( n.nodeType == 3 && /\S/g.test(n.textContent) ){
             break;
           }
         }
         if( n == null ){
+          // That element should work as a viewport.
           return angular.element(e);
         }
       }
@@ -96,11 +111,10 @@
       viewport.css(viewportCss);
     }
 
-    // Apply explicit styles to the content element.
-    //
+    // Apply explicit styles to the content element to prevent pesky padding
+    // or borders messing with our calculations:
     function setContentCss(content){
       var contentCss = {
-        width:'auto',
         margin: 0,
         padding: 0,
         border: 0,
@@ -111,7 +125,8 @@
 
     // TODO: compute outerHeight (padding + border unless box-sizing is border)
     function computeRowHeight(element){
-      var style = window.getComputedStyle ? window.getComputedStyle(element) : element.currentStyle,
+      var style = window.getComputedStyle ? window.getComputedStyle(element)
+                                          : element.currentStyle,
           maxHeight = style && style.getPropertyValue('max-height'),
           height = style && style.getPropertyValue('height');
 
@@ -130,9 +145,9 @@
       return parseInt(height, 10);
     }
 
-    // The compile gathers information about the declaration. It doesn't make
-    // much sense for separate compile/link as we need a viewport parent that
-    // is exculsively ours.
+    // The compile gathers information about the declaration. There's not much
+    // else we could do in the compile step as we need a viewport parent that
+    // is exculsively ours - this is only available at link time.
     function sfVirtualRepeatCompile(element, attr, linker) {
       var ident = parseRepeatExpression(attr.sfVirtualRepeat),
           LOW_WATER = 100,
@@ -148,14 +163,13 @@
       // adds a listener to handle child scopes based on the active rows.
       function sfVirtualRepeatPostLink(scope, iterStartElement, attrs){
 
-        var state = 'ngModel' in attrs ? scope.$eval(attrs.ngModel) : {};
         var rendered = [];
         var rowHeight = 0;
         var sticky = false;
         var viewport = findViewport(iterStartElement);
         var content = viewport.children();
-
-        // The list structure is controlled by a few simple state variables:
+        // The list structure is controlled by a few simple (visible) variables:
+        var state = 'ngModel' in attrs ? scope.$eval(attrs.ngModel) : {};
         //  - The index of the first active element
         state.firstActive = 0;
         //  - The index of the first visible element
@@ -169,7 +183,7 @@
 
         setContentCss(content);
         setViewportCss(viewport);
-        // When the user scrolls, we move the state.firstActive
+        // When the user scrolls, we move the `state.firstActive`
         viewport.bind('scroll', sfVirtualRepeatOnScroll);
 
         // The watch on the collection is just a watch on the length of the
@@ -183,9 +197,13 @@
         // Apply explicit styles to the item element
         function setElementCss (element) {
           var elementCss = {
-            display: 'block',
+            // no margin or it'll screw up the height calculations.
             margin: '0'
           };
+          if( !isTagNameInList(element[0], DONT_SET_DISPLAY_BLOCK) ){
+            // display: block if it's safe to do so
+            elementCss.display = 'block';
+          }
           if( rowHeight ){
             elementCss.height = rowHeight+'px';
           }
@@ -237,7 +255,7 @@
           }
           // Enter the angular world for the state change to take effect.
           scope.$apply(function(){
-            state.firstVisible = Math.floor(evt.target.scrollTop / rowHeight),
+            state.firstVisible = Math.floor(evt.target.scrollTop / rowHeight);
             state.visible = Math.ceil(viewport[0].clientHeight / rowHeight);
             $log.log('scroll to row %o', state.firstVisible);
             sticky = evt.target.scrollTop + evt.target.clientHeight >= evt.target.scrollHeight;
