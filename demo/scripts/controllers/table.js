@@ -1,7 +1,7 @@
 (function(){
   'use strict';
 
-  angular.module('virtualScrollingApp').controller('TableCtrl', function TableCtrl($scope) {
+  angular.module('virtualScrollingApp').controller('TableCtrl', function TableCtrl($scope, $http) {
     $scope.log = {
       title: "None",
       msgs: [{
@@ -22,6 +22,17 @@
     $scope.logit = function(){
       $scope.log.msgs.push({ time: new Date(), message: $scope.message });
     };
+    $scope.book = {
+      title: "None",
+      lines: []
+    };
+    $http({
+      method: 'GET',
+      url: '/data/tale-of-two-cities.txt'
+    }).success(function(data){
+      $scope.book.title = "Tale of Two Cities";
+      $scope.book.lines = data.split('\n');
+    });
   });
 }());
 

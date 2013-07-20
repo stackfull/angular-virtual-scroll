@@ -2,12 +2,14 @@
   <p>Constructing Tables.
   <h4>Log Messages</h4>
   <div class="viewport virtual">
-    <table class="table">
-      <tr sf-virtual-repeat="msg in log.msgs">
-        <td class="time">{{msg.time|date:'mediumTime'}}
-        <td class="message">{{msg.message}}
-      </tr>
-    </table>
+    <div>
+      <table class="table">
+        <tr sf-virtual-repeat="msg in log.msgs">
+          <td class="time">{{msg.time|date:'mediumTime'}}
+          <td class="message">{{msg.message}}
+        </tr>
+      </table>
+    </div>
   </div>
   <div class="well">
     <form class="form-inline">
@@ -20,23 +22,41 @@
 
   <!-- Structure adapted from a problem plunk - http://plnkr.co/edit/e4s5dXzr0QsdOh1u9hOd -->
   <div class="viewport">
-  <table class="table table-striped">
-    <thead>
-      <tr>
-        <th>Time</th>
-        <th>Message</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr sf-virtual-repeat="msg in log.msgs">
-        <td class="time">{{msg.time|date:'mediumTime'}}
-        <td class="message">{{msg.message}}
-      </tr>
-    </tbody>
-  </table>
-</div>
+    <div>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Time</th>
+            <th>Message</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr sf-virtual-repeat="msg in log.msgs">
+            <td class="time">{{msg.time|date:'mediumTime'}}
+            <td class="message">{{msg.message}}
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 
-<hr>
+  <hr>
+
+  <div>
+    <p>Big list, meet big table
+    <h4>{{book.title}}</h4>
+    <div class="viewport">
+      <div>
+        <table>
+          <thead>
+            <tr><th>#<th>Line
+          <tbody>
+            <tr sf-virtual-repeat="line in book.lines"><th>{{$index}}: <td>{{line}}
+        </table>
+      </div>
+    </div>
+    <pre>{{book.lines.length}} lines.</pre>
+  </div>
 
 </div>
 

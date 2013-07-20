@@ -22,9 +22,12 @@
   list-style: none;
 }
 
+tr {
+  height: 25px;
+}
 td {
   font: 12px monospace;
-  line-height: 1em;
+  line-height: 1em !important;
 }
 td.time {
   width: 7em;

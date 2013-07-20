@@ -19,8 +19,7 @@ module.exports = function( grunt ) {
     'grunt-contrib-connect',
     'grunt-contrib-copy',
     'grunt-contrib-clean',
-    'grunt-bowerful',
-    'gruntacular'
+    'grunt-bowerful'
   ];
 
 
@@ -180,6 +179,7 @@ module.exports = function( grunt ) {
       site: {
         options: {
           port: 8000,
+          hostname: '*',
           base: 'site'
         }
       },

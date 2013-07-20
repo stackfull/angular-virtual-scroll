@@ -9,6 +9,7 @@
   // (part of the sf.virtualScroll module).
   var mod = angular.module('sf.virtualScroll');
   var DONT_WORK_AS_VIEWPORTS = ['TABLE', 'TBODY', 'THEAD', 'TR', 'TFOOT'];
+  var DONT_WORK_AS_CONTENT = ['TABLE', 'TBODY', 'THEAD', 'TR', 'TFOOT'];
   var DONT_SET_DISPLAY_BLOCK = ['TABLE', 'TBODY', 'THEAD', 'TR', 'TFOOT'];
 
   // Utility to clip to range
@@ -53,15 +54,15 @@
       var t, tag = element.tagName.toUpperCase();
       for( t = 0; t < list.length; t++ ){
         if( list[t] === tag ){
-         return true;
+          return true;
         }
       }
       return false;
     }
 
 
-    // Utility to find the viewport element given the start element:
-    function findViewport(startElement){
+    // Utility to find the viewport/content elements given the start element:
+    function findViewportAndContent(startElement){
       /*jshint eqeqeq:false, curly:false */
       var root = $rootElement[0];
       var e, n;
@@ -73,6 +74,8 @@
         if( isTagNameInList(e, DONT_WORK_AS_VIEWPORTS) ) continue;
         // has a single child element (the content),
         if( e.childElementCount != 1 ) continue;
+        // which is not in the blacklist
+        if( isTagNameInList(e.firstElementChild, DONT_WORK_AS_CONTENT) ) continue;
         // and no text.
         for( n = e.firstChild; n; n = n.nextSibling ){
           if( n.nodeType == 3 && /\S/g.test(n.textContent) ){
@@ -81,7 +84,10 @@
         }
         if( n == null ){
           // That element should work as a viewport.
-          return angular.element(e);
+          return {
+            viewport: angular.element(e),
+            content: angular.element(e.firstElementChild)
+          };
         }
       }
       throw new Error("No suitable viewport element");
@@ -130,12 +136,12 @@
           maxHeight = style && style.getPropertyValue('max-height'),
           height = style && style.getPropertyValue('height');
 
-      if( height && height !== '0px' ){
+      if( height && height !== '0px' && height !== 'auto' ){
         $log.info('Row height is "%s" from css height', height);
-      }else if( maxHeight && maxHeight !== '0px' ) {
+      }else if( maxHeight && maxHeight !== '0px' && maxHeight !== 'none' ){
         height = maxHeight;
         $log.info('Row height is "%s" from css max-height', height);
-      }else if( element[0].clientHeight ){
+      }else if( element.clientHeight ){
         height = element.clientHeight+'px';
         $log.info('Row height is "%s" from client height', height);
       }else{
@@ -166,8 +172,7 @@
         var rendered = [];
         var rowHeight = 0;
         var sticky = false;
-        var viewport = findViewport(iterStartElement);
-        var content = viewport.children();
+        var dom = findViewportAndContent(iterStartElement);
         // The list structure is controlled by a few simple (visible) variables:
         var state = 'ngModel' in attrs ? scope.$eval(attrs.ngModel) : {};
         //  - The index of the first active element
@@ -181,10 +186,10 @@
         // - The total number of elements
         state.total = 0;
 
-        setContentCss(content);
-        setViewportCss(viewport);
+        setContentCss(dom.content);
+        setViewportCss(dom.viewport);
         // When the user scrolls, we move the `state.firstActive`
-        viewport.bind('scroll', sfVirtualRepeatOnScroll);
+        dom.viewport.bind('scroll', sfVirtualRepeatOnScroll);
 
         // The watch on the collection is just a watch on the length of the
         // collection. We don't care if the content changes.
@@ -256,7 +261,7 @@
           // Enter the angular world for the state change to take effect.
           scope.$apply(function(){
             state.firstVisible = Math.floor(evt.target.scrollTop / rowHeight);
-            state.visible = Math.ceil(viewport[0].clientHeight / rowHeight);
+            state.visible = Math.ceil(dom.viewport[0].clientHeight / rowHeight);
             $log.log('scroll to row %o', state.firstVisible);
             sticky = evt.target.scrollTop + evt.target.clientHeight >= evt.target.scrollHeight;
             recomputeActive();
@@ -340,11 +345,11 @@
             if( !rowHeight && rendered.length ){
               rowHeight = computeRowHeight(rendered[0][0]);
             }
-            content.css({'padding-top': newValue.start * rowHeight + 'px'});
+            dom.content.css({'padding-top': newValue.start * rowHeight + 'px'});
           }
-          content.css({'height': newValue.len * rowHeight + 'px'});
+          dom.content.css({'height': newValue.len * rowHeight + 'px'});
           if( sticky ){
-            viewport[0].scrollTop = viewport[0].clientHeight + viewport[0].scrollHeight;
+            dom.viewport[0].scrollTop = dom.viewport[0].clientHeight + dom.viewport[0].scrollHeight;
           }
         }
       }
