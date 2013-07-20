@@ -27,6 +27,10 @@
           <th>Active Rows: <td>{{scrollModel.active}}
         <tr>
           <th>Total Rows: <td>{{scrollModel.total}}
+        <tr>
+          <th>At Start?: <td>{{scrollModel.firstActive == 0}}
+        <tr>
+          <th>At End?: <td>{{scrollModel.firstActive + scrollModel.active == scrollModel.total}}
       </table>
   </div>
   </div>
