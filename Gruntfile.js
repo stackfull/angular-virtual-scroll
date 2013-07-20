@@ -165,7 +165,7 @@ module.exports = function( grunt ) {
         directory: 'site/components',
 
         packages: {
-          'angular-complete': "1.0.x",
+          'angular': "1.0.x",
           jquery: "1.9.x",
           json3: "3.2.x",
           "es5-shim": "2.0.x",
