@@ -155,9 +155,7 @@
     // else we could do in the compile step as we need a viewport parent that
     // is exculsively ours - this is only available at link time.
     function sfVirtualRepeatCompile(element, attr, linker) {
-      var ident = parseRepeatExpression(attr.sfVirtualRepeat),
-          LOW_WATER = 100,
-          HIGH_WATER = 200;
+      var ident = parseRepeatExpression(attr.sfVirtualRepeat);
 
       return {
         post: sfVirtualRepeatPostLink
@@ -185,6 +183,11 @@
         state.active = 0;
         // - The total number of elements
         state.total = 0;
+        // - The point at which we add new elements
+        state.lowWater = state.lowWater || 100;
+        // - The point at which we remove old elements
+        state.highWater = state.highWater || 300;
+        // TODO: now watch the water marks
 
         setContentCss(dom.content);
         setViewportCss(dom.viewport);
@@ -245,11 +248,11 @@
         function recomputeActive() {
           // We want to set the start to the low water mark unless the current
           // start is already between the low and high water marks.
-          var start = clip(state.firstActive, state.firstVisible - LOW_WATER, state.firstVisible - HIGH_WATER);
+          var start = clip(state.firstActive, state.firstVisible - state.lowWater, state.firstVisible - state.highWater);
           // Similarly for the end
           var end = clip(state.firstActive + state.active,
-                         state.firstVisible + state.visible + LOW_WATER,
-                         state.firstVisible + state.visible + HIGH_WATER );
+                         state.firstVisible + state.visible + state.lowWater,
+                         state.firstVisible + state.visible + state.highWater );
           state.firstActive = Math.max(0, start);
           state.active = Math.min(end, state.total) - state.firstActive;
         }
