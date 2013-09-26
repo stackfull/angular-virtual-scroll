@@ -38,7 +38,7 @@
     //
     // into `{ value: "a", collection: "b" }`
     function parseRepeatExpression(expression){
-      var match = expression.match(/^\s*([\$\w]+)\s+in\s+(\S*)\s*$/);
+      var match = expression.match(/^\s*([\$\w]+)\s+in\s+([\S\s]*)$/);
       if (! match) {
         throw new Error("Expected sfVirtualRepeat in form of '_item_ in _collection_' but got '" +
                         expression + "'.");
