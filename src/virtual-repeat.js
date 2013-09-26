@@ -22,7 +22,7 @@
     return Math.max(min, Math.min(value, max));
   }
 
-  mod.directive('sfVirtualRepeat', ['$log', '$rootElement', function($log, $rootElement){
+  mod.directive('sfVirtualRepeat', ['$log', '$rootElement', '$timeout', function($log, $rootElement, $timeout){
 
     return {
       require: '?ngModel',
@@ -261,8 +261,8 @@
           if( !rowHeight ){
             return;
           }
-          // Enter the angular world for the state change to take effect.
-          scope.$apply(function(){
+          
+          var act = function() {
             state.firstVisible = Math.floor(evt.target.scrollTop / rowHeight);
             state.visible = Math.ceil(dom.viewport[0].clientHeight / rowHeight);
             $log.log('scroll to row %o', state.firstVisible);
@@ -270,7 +270,13 @@
             recomputeActive();
             $log.log(' state is now %o', state);
             $log.log(' sticky = %o', sticky);
-          });
+          }
+          
+          if(state._onScrollPromise) {
+            $timeout.cancel(state._onScrollPromise)
+          }
+          
+          state._onScrollPromise = $timeout(act, 100)
         }
 
         function sfVirtualRepeatWatchExpression(scope){
