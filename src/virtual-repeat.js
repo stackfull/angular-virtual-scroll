@@ -253,7 +253,7 @@
           var end = clip(state.firstActive + state.active,
                          state.firstVisible + state.visible + state.lowWater,
                          state.firstVisible + state.visible + state.highWater );
-          state.firstActive = Math.max(0, start);
+          state.firstActive = clip(start, 0, state.total - state.visible - state.lowWater);
           state.active = Math.min(end, state.total) - state.firstActive;
         }
 
