@@ -1,10 +1,15 @@
-<div>
+<div class="container">
   <p>That's right, a big list
-  <h4>{{book.title}}</h4>
+  <div class="well">
+    <form class="form-inline pull-right">
+      <input type="text" class="search-query" ng-model="query" ng-change="filter_lines()">
+      <span class="line-count badge">{{filtered_lines.length}} lines.</span>
+    </form>
+    <h4>{{book.title}}</h4>
+  </div>
   <div class="viewport">
     <div>
-      <p sf-virtual-repeat="line in book.lines">{{line}}
+      <p sf-virtual-repeat="line in filtered_lines">{{line}}
     </div>
   </div>
-  <pre>{{book.lines.length}} lines.</pre>
 </div>

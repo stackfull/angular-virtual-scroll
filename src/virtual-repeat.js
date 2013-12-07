@@ -218,24 +218,26 @@
           element.css(elementCss);
         }
 
-        function makeNewScope (idx, collection, containerScope) {
-          var childScope = containerScope.$new();
+        function makeNewScope (idx, colExpr, containerScope) {
+          var childScope = containerScope.$new(),
+              collection = containerScope.$eval(colExpr);
           childScope[ident.value] = collection[idx];
           childScope.$index = idx;
           childScope.$first = (idx === 0);
           childScope.$last = (idx === (collection.length - 1));
           childScope.$middle = !(childScope.$first || childScope.$last);
           childScope.$watch(function updateChildScopeItem(){
+            collection = containerScope.$eval(colExpr);
             childScope[ident.value] = collection[idx];
           });
           return childScope;
         }
 
-        function addElements (start, end, collection, containerScope, insPoint) {
+        function addElements (start, end, colExpr, containerScope, insPoint) {
           var frag = document.createDocumentFragment();
           var newElements = [], element, idx, childScope;
           for( idx = start; idx !== end; idx ++ ){
-            childScope = makeNewScope(idx, collection, containerScope);
+            childScope = makeNewScope(idx, colExpr, containerScope);
             element = linker(childScope, angular.noop);
             setElementCss(element);
             newElements.push(element);
@@ -299,11 +301,10 @@
         // and remove scopes and elements
         function sfVirtualRepeatListener(newValue, oldValue, scope){
           var oldEnd = oldValue.start + oldValue.active,
-              collection = scope.$eval(ident.collection),
               newElements;
           if( newValue === oldValue ){
             $log.info('initial listen');
-            newElements = addElements(newValue.start, oldEnd, collection, scope, iterStartElement);
+            newElements = addElements(newValue.start, oldEnd, ident.collection, scope, iterStartElement);
             rendered = newElements;
             if( rendered.length ){
               rowHeight = computeRowHeight(newElements[0][0]);
@@ -319,7 +320,7 @@
             if( !contiguous ){
               $log.info('non-contiguous change');
               destroyActiveElements('pop', rendered.length);
-              rendered = addElements(newValue.start, newEnd, collection, scope, iterStartElement);
+              rendered = addElements(newValue.start, newEnd, ident.collection, scope, iterStartElement);
             }else{
               if( forward ){
                 $log.info('need to remove from the top');
@@ -329,7 +330,7 @@
                 newElements = addElements(
                   newValue.start,
                   oldValue.start,
-                  collection, scope, iterStartElement);
+                  ident.collection, scope, iterStartElement);
                 rendered = newElements.concat(rendered);
               }
               if( newEnd < oldEnd ){
@@ -341,7 +342,7 @@
                 newElements = addElements(
                   oldEnd,
                   newEnd,
-                  collection, scope, lastElement);
+                  ident.collection, scope, lastElement);
                 rendered = rendered.concat(newElements);
               }
             }
