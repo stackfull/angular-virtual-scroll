@@ -137,13 +137,13 @@
           height = style && style.getPropertyValue('height');
 
       if( height && height !== '0px' && height !== 'auto' ){
-        $log.info('Row height is "%s" from css height', height);
+        $log.debug('Row height is "%s" from css height', height);
       }else if( maxHeight && maxHeight !== '0px' && maxHeight !== 'none' ){
         height = maxHeight;
-        $log.info('Row height is "%s" from css max-height', height);
+        $log.debug('Row height is "%s" from css max-height', height);
       }else if( element.clientHeight ){
         height = element.clientHeight+'px';
-        $log.info('Row height is "%s" from client height', height);
+        $log.debug('Row height is "%s" from client height', height);
       }else{
         throw new Error("Unable to compute height of row");
       }
@@ -303,7 +303,7 @@
           var oldEnd = oldValue.start + oldValue.active,
               newElements;
           if( newValue === oldValue ){
-            $log.info('initial listen');
+            $log.debug('initial listen');
             newElements = addElements(newValue.start, oldEnd, ident.collection, scope, iterStartElement);
             rendered = newElements;
             if( rendered.length ){
@@ -316,17 +316,17 @@
                                 : oldValue.start - newValue.start;
             var endDelta = newEnd >= oldEnd ? newEnd - oldEnd : oldEnd - newEnd;
             var contiguous = delta < (forward ? oldValue.active : newValue.active);
-            $log.info('change by %o,%o rows %s', delta, endDelta, forward ? 'forward' : 'backward');
+            $log.debug('change by %o,%o rows %s', delta, endDelta, forward ? 'forward' : 'backward');
             if( !contiguous ){
-              $log.info('non-contiguous change');
+              $log.debug('non-contiguous change');
               destroyActiveElements('pop', rendered.length);
               rendered = addElements(newValue.start, newEnd, ident.collection, scope, iterStartElement);
             }else{
               if( forward ){
-                $log.info('need to remove from the top');
+                $log.debug('need to remove from the top');
                 destroyActiveElements('shift', delta);
               }else if( delta ){
-                $log.info('need to add at the top');
+                $log.debug('need to add at the top');
                 newElements = addElements(
                   newValue.start,
                   oldValue.start,
@@ -334,11 +334,11 @@
                 rendered = newElements.concat(rendered);
               }
               if( newEnd < oldEnd ){
-                $log.info('need to remove from the bottom');
+                $log.debug('need to remove from the bottom');
                 destroyActiveElements('pop', oldEnd - newEnd);
               }else if( endDelta ){
                 var lastElement = rendered[rendered.length-1];
-                $log.info('need to add to the bottom');
+                $log.debug('need to add to the bottom');
                 newElements = addElements(
                   oldEnd,
                   newEnd,
