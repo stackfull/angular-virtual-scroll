@@ -243,7 +243,7 @@ module.exports = function( grunt ) {
     run("cd dist; git checkout master");
     // Bump version
     var newVer = grunt.config('pkg').version;
-    var comp = grunt.file.readJSON(DISTDIR+"/component.json");
+    var comp = grunt.file.readJSON(DISTDIR+"/bower.json");
     grunt.log.writeln("Package version: " + newVer);
     grunt.log.writeln("Component version: " + comp.version);
     if( !semver.gt( newVer, comp.version ) ){
@@ -255,14 +255,14 @@ module.exports = function( grunt ) {
   grunt.registerTask('release-commit', 'push new build to bower component repo', function(){
     // Stamp version
     var newVer = grunt.config('pkg').version;
-    var comp = grunt.file.readJSON(DISTDIR+"/component.json");
+    var comp = grunt.file.readJSON(DISTDIR+"/bower.json");
     grunt.log.writeln("Package version: " + newVer);
     grunt.log.writeln("Component version: " + comp.version);
     if( !semver.gt( newVer, comp.version ) ){
       grunt.warn("Need to up-version package.json first!");
     }
     comp.version = newVer;
-    grunt.file.write(DISTDIR+"/component.json", JSON.stringify(comp, null, '  ')+'\n');
+    grunt.file.write(DISTDIR+"/bower.json", JSON.stringify(comp, null, '  ')+'\n');
     // Commit submodule
     // Tag submodule
     run('cd dist; git commit -a -m"Build version '+ newVer +'"', "Commited to bower repo");

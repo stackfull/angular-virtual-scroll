@@ -9,11 +9,15 @@ contains different solutions to the problem.
 About
 -----
 
-The module was developed as a proof of concept. I needed to display log
-messages and I didn't want to use paging. There were some excellent
-alternatives including some wrappers of jQuery grids, but nothing was using the
-`ng-repeat` pattern. I wrote a couple of articles explaining myself as I went
-along:
+The module was originally developed as a proof of concept but has matured into
+a useable component. It isn't the ideal solution to the performance issues of
+large `ng-repeat` instances, but it does work as a drop-in replacement (with
+some caveats).
+
+It started because I needed to display log messages and I didn't want to use
+paging. There were some excellent alternatives including some wrappers of
+jQuery grids, but nothing was using the `ng-repeat` pattern. I wrote a couple
+of articles explaining myself as I went along:
 
   * http://blog.stackfull.com/2013/02/angularjs-virtual-scrolling-part-1/
   * http://blog.stackfull.com/2013/03/angularjs-virtual-scrolling-part-2/
@@ -111,4 +115,35 @@ If you are using `grunt` for your build, consider using a plugin like
 [bowerful](https://npmjs.org/package/grunt-bowerful).
 
 All comments to <paul@stackfull.com>
+
+ChangeLog
+---------
+
+### 0.6.0 (19 Jan 2014)
+
+ - [ENHANCEMENT \#9] allow filters in the collection expression
+ - [FIX \#12] improved stability in the face of collection changes
+ 
+### 0.5.0 (28 Jul 2013)
+
+ - [FIX \#6] be more careful searching for a viewport (tables again)
+ - [ENHANCEMENT \#2]configurable watermark levels
+ - more demos.
+
+### 0.4.0 (11 May 2013)
+
+ - [ENHANCEMENT \#4] prevent tables messing up the viewport
+ - expose state variables as models
+
+### 0.3.1 (14 Apr 2013)
+
+ - added "auto-scroll" feature to the virtual repeater
+ - fleshed out demos in place of tests
+
+### 0.3.0 (17 Mar 2013)
+First "dagnamit" fix.
+
+### 0.2.0 (16 Mar 2013)
+First sight of daylight.
+ 
 
