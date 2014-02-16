@@ -317,6 +317,12 @@
             var endDelta = newEnd >= oldEnd ? newEnd - oldEnd : oldEnd - newEnd;
             var contiguous = delta < (forward ? oldValue.active : newValue.active);
             $log.debug('change by %o,%o rows %s', delta, endDelta, forward ? 'forward' : 'backward');
+            
+            if(newValue.len !== oldValue.len){
+              destroyActiveElements('pop', rendered.length);
+              rendered = addElements(newValue.start, newEnd, collection, scope, iterStartElement);
+            }
+            
             if( !contiguous ){
               $log.debug('non-contiguous change');
               destroyActiveElements('pop', rendered.length);
