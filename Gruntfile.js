@@ -162,10 +162,11 @@ module.exports = function( grunt ) {
 
     bowerful: {
       site: {
-        directory: 'site/components',
+        store: 'site/components',
 
         packages: {
-          'angular': "1.0.x",
+          'angular': "1.2.x",
+          'angular-route': "1.2.x",
           jquery: "1.9.x",
           json3: "3.2.x",
           "es5-shim": "2.0.x",
@@ -179,7 +180,7 @@ module.exports = function( grunt ) {
       site: {
         options: {
           port: 8000,
-          hostname: '*',
+          host: '*',
           base: 'site'
         }
       },

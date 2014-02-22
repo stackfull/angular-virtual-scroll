@@ -17,14 +17,15 @@
       path: '/'+file
     });
   });
-  var mod = angular.module('virtualScrollingApp', ['sf.virtualScroll']);
-  mod.config(['$routeProvider', function($routeProvider) {
+  var mod = angular.module('virtualScrollingApp', ['sf.virtualScroll', 'ngRoute']);
+  mod.config(['$routeProvider', '$logProvider', function($routeProvider, $logProvider) {
     angular.forEach(DEMOS, function(demo){
       $routeProvider.when(demo.path, { templateUrl: 'views/'+demo.file+'.html', controller: demo.id+'Ctrl' });
     });
     $routeProvider.otherwise({
       redirectTo: DEMOS[0].path
     });
+    $logProvider.debugEnabled(false);
   }]);
 
   mod.controller('NavCtrl', function($scope, $location){
