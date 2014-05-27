@@ -315,7 +315,7 @@
             var delta = forward ? newValue.start - oldValue.start
                                 : oldValue.start - newValue.start;
             var endDelta = newEnd >= oldEnd ? newEnd - oldEnd : oldEnd - newEnd;
-            var contiguous = delta < (forward ? oldValue.active : newValue.active);
+            var contiguous = newValue.len === oldValue.len && delta < (forward ? oldValue.active : newValue.active);
             $log.debug('change by %o,%o rows %s', delta, endDelta, forward ? 'forward' : 'backward');
             if( !contiguous ){
               $log.debug('non-contiguous change');
@@ -361,4 +361,3 @@
   }]);
 
 }());
-
