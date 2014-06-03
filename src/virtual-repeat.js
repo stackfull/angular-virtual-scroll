@@ -277,14 +277,14 @@
 
         function sfVirtualRepeatWatchExpression(scope){
           var coll = scope.$eval(ident.collection);
-          if( coll.length !== state.total ){
+          if( coll && coll.length !== state.total ){
             state.total = coll.length;
             recomputeActive();
           }
           return {
             start: state.firstActive,
             active: state.active,
-            len: coll.length
+            len: coll ? coll.length : 0
           };
         }
 
