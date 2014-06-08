@@ -17,10 +17,15 @@
       path: '/'+file
     });
   });
-  var mod = angular.module('virtualScrollingApp', ['sf.virtualScroll', 'ngRoute']);
+  var mod = angular.module('virtualScrollingApp',
+                           ['sf.virtualScroll', 'ngRoute']);
+
   mod.config(['$routeProvider', '$logProvider', function($routeProvider, $logProvider) {
     angular.forEach(DEMOS, function(demo){
-      $routeProvider.when(demo.path, { templateUrl: 'views/'+demo.file+'.html', controller: demo.id+'Ctrl' });
+      $routeProvider.when(demo.path, {
+        templateUrl: 'views/'+demo.file+'.html',
+        controller: demo.id+'Ctrl'
+      });
     });
     $routeProvider.otherwise({
       redirectTo: DEMOS[0].path
@@ -31,6 +36,7 @@
   mod.controller('NavCtrl', function($scope, $location){
     $scope.loc = $location;
     $scope.demos = DEMOS;
+    $scope.version = "demo";
   });
 
 }());

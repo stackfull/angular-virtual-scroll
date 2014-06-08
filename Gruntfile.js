@@ -3,7 +3,6 @@ module.exports = function( grunt ) {
   'use strict';
   var SOURCES = [ 'src/**/*.js' ];
   var DEMOSOURCES = [ 'demo/scripts/**/*.js' ];
-  var TESTSOURCES = [ 'test/spec/**/*.js' ];
   var DISTSOURCES = [
     'src/module.js',
     'src/sublist.js',
@@ -103,50 +102,6 @@ module.exports = function( grunt ) {
             angular: true
           }
         }
-      },
-
-      test: {
-        src: TESTSOURCES,
-        options: {
-          globals: {
-            angular: true,
-            inject: true,
-            _: false,
-            _V_: false,
-            afterEach: false,
-            beforeEach: false,
-            confirm: false,
-            context: false,
-            describe: false,
-            expect: false,
-            it: false,
-            jasmine: false,
-            mostRecentAjaxRequest: false,
-            qq: false,
-            runs: false,
-            spyOn: false,
-            spyOnEvent: false,
-            waitsFor: false,
-            xdescribe: false,
-            xit: false,
-            setFixtures: false,
-            sandbox: false
-          }
-        }
-      }
-    },
-
-    testacular: {
-      unit: {
-        configFile: 'config/testacular.conf.js',
-        browsers: ['PhantomJS'],
-        autoWatch: false,
-        singleRun: true
-      },
-      watched: {
-        configFile: 'config/testacular.conf.js',
-        autoWatch: false,
-        browsers: ['PhantomJS']
       }
     },
 
@@ -170,7 +125,7 @@ module.exports = function( grunt ) {
           jquery: "1.9.x",
           json3: "3.2.x",
           "es5-shim": "2.0.x",
-          "bootstrap.css": "2.1.1",
+          "bootstrap": "3.1.1",
           "jasmine-jquery": "1.x"
         }
       }
@@ -194,18 +149,23 @@ module.exports = function( grunt ) {
 
     watch: {
       sources: {
+        options: {
+          livereload: true
+        },
         files: SOURCES,
         tasks: ['jshint:source', 'concat', 'copy:concat']
       },
       demo: {
+        options: {
+          livereload: true
+        },
         files: ['demo/**/*'],
         tasks: ['jshint:source', 'copy:demo']
       },
-      tests: {
-        files: TESTSOURCES,
-        tasks: ['test', 'jshint:test']
-      },
       gruntFile: {
+        options: {
+          reload: true
+        },
         files: ['Gruntfile.js'],
         tasks: ['jshint:grunt']
       }
@@ -221,7 +181,6 @@ module.exports = function( grunt ) {
 
   grunt.registerTask('doc', ['docco']);
   grunt.registerTask('min', ['uglify']);
-  grunt.registerTask('test', ['testacular:unit']);
 
   // 'demo' task - stage demo system into 'site' and watch for source changes
   grunt.registerTask('build-site', ['bowerful', 'copy:demo', 'concat', 'copy:concat']);
