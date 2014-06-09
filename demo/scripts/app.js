@@ -33,10 +33,10 @@
     $logProvider.debugEnabled(false);
   }]);
 
-  mod.controller('NavCtrl', function($scope, $location){
+  mod.controller('NavCtrl', function($scope, $location, sfVirtualScroll){
     $scope.loc = $location;
     $scope.demos = DEMOS;
-    $scope.version = "demo";
+    $scope.version = sfVirtualScroll.version;
   });
 
 }());

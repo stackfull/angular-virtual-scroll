@@ -1,6 +1,9 @@
 /*global module:false */
 module.exports = function( grunt ) {
   'use strict';
+  var shell = require('shelljs');
+  var semver = require('semver');
+
   var SOURCES = [ 'src/**/*.js' ];
   var DEMOSOURCES = [ 'demo/scripts/**/*.js' ];
   var DISTSOURCES = [
@@ -21,10 +24,14 @@ module.exports = function( grunt ) {
     'grunt-bowerful'
   ];
 
+  var describe = shell.exec('git describe');
 
   grunt.initConfig({
 
     pkg: grunt.file.readJSON('package.json'),
+    git: {
+      description: describe.output.trim()
+    },
 
     clean: {
       dist: [DISTDIR],
@@ -51,7 +58,10 @@ module.exports = function( grunt ) {
         stripBanners: {
           line: true
         },
-        banner: '// <%= pkg.name %> - v<%= pkg.version %>\n\n'
+        banner: '// <%= pkg.name %> - v<%= pkg.version %>\n\n',
+        process: {
+          version: true
+        }
       },
       dist: {
         src: DISTSOURCES,
@@ -185,9 +195,6 @@ module.exports = function( grunt ) {
   // 'demo' task - stage demo system into 'site' and watch for source changes
   grunt.registerTask('build-site', ['bowerful', 'copy:demo', 'concat', 'copy:concat']);
   grunt.registerTask('demo', ['clean:site', 'build-site', 'connect:site', 'watch']);
-
-  var shell = require('shelljs');
-  var semver = require('semver');
 
   function run(cmd, msg){
     shell.exec(cmd, {silent:true});

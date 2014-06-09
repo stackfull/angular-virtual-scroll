@@ -4,7 +4,10 @@
 //
 (function(){
 'use strict';
-angular.module('sf.virtualScroll', []);
+angular.module('sf.virtualScroll', []).constant('sfVirtualScroll', {
+  release: "<%= pkg.version %>",
+  version: "<%= git.description %>"
+});
 }());
 
 
