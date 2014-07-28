@@ -119,6 +119,16 @@ All comments to <paul@stackfull.com>
 ChangeLog
 ---------
 
+### 0.6.2 (28 Jul 2014)
+
+ - added sfVirtualScroll constant for version info
+ - [FIX \#25] Guard against empty collection
+
+### 0.6.1 (30 Apr 2014)
+
+ - [ENHANCEMENT \#13] reduce debug noise
+ - upgrade dependencies
+
 ### 0.6.0 (19 Jan 2014)
 
  - [ENHANCEMENT \#9] allow filters in the collection expression
@@ -128,7 +138,7 @@ ChangeLog
 
  - [FIX \#6] be more careful searching for a viewport (tables again)
  - [ENHANCEMENT \#2]configurable watermark levels
- - more demos.
+ - more demos
 
 ### 0.4.0 (11 May 2013)
 
