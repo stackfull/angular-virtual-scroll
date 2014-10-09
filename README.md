@@ -1,5 +1,6 @@
 angular-virtual-scroll
 ======================
+[![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/stackfull/angular-virtual-scroll?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 Source for the sf.virtualScroll module for AngularJS
 
