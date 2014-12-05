@@ -33,7 +33,7 @@ included as a dependency:
 
     angular.module('myModule', ['sf.virtualScroll']);
 
-Then use the directive `sf-virtual-scroll` just as you would use `ng-repeat`.
+Then use the directive `sf-virtual-repeat` just as you would use `ng-repeat`.
 
     <div class="viewport">
       <div>
