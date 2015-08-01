@@ -169,7 +169,8 @@
 
         var rendered = [];
         var rowHeight = 0;
-        var sticky = false;
+        var scrolledToBottom = false;
+        var stickyEnabled = "sticky" in attrs;
         var dom = findViewportAndContent(iterStartElement);
         // The list structure is controlled by a few simple (visible) variables:
         var state = 'ngModel' in attrs ? scope.$eval(attrs.ngModel) : {};
@@ -268,10 +269,10 @@
             state.firstVisible = Math.floor(evt.target.scrollTop / rowHeight);
             state.visible = Math.ceil(dom.viewport[0].clientHeight / rowHeight);
             $log.debug('scroll to row %o', state.firstVisible);
-            sticky = evt.target.scrollTop + evt.target.clientHeight >= evt.target.scrollHeight;
+            scrolledToBottom = evt.target.scrollTop + evt.target.clientHeight >= evt.target.scrollHeight;
             recomputeActive();
             $log.debug(' state is now %o', state);
-            $log.debug(' sticky = %o', sticky);
+            $log.debug(' scrolledToBottom = %o', scrolledToBottom);
           });
         }
 
@@ -352,7 +353,7 @@
             dom.content.css({'padding-top': newValue.start * rowHeight + 'px'});
           }
           dom.content.css({'height': newValue.len * rowHeight + 'px'});
-          if( sticky ){
+          if( scrolledToBottom && stickyEnabled ){
             dom.viewport[0].scrollTop = dom.viewport[0].clientHeight + dom.viewport[0].scrollHeight;
           }
         }
