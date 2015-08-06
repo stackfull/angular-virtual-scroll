@@ -3,7 +3,7 @@
   <h4>Log Messages</h4>
   <div class="viewport virtual">
     <div>
-      <p sf-virtual-repeat="msg in log.msgs">{{msg.time|date:'mediumTime'}}: {{msg.message}}
+      <p sf-virtual-repeat="msg in log.msgs" sticky>{{msg.time|date:'mediumTime'}}: {{msg.message}}
     </div>
   </div>
 </div>
