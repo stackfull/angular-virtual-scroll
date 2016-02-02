@@ -24,6 +24,14 @@ of articles explaining myself as I went along:
 
 There should be an online demo here: http://demo.stackfull.com/virtual-scroll/
 
+**2016:** I don't get much time to add to this component unless there are serious
+bugs to fix. If you need more features, there is a similar component
+https://github.com/kamilkp/angular-vs-repeat
+that uses a nicer directive structure in that the custom directive surrounds a
+vanilla `ng-repeat` to define the viewport. Although this relies on internals
+of ng-repeat, it is a better user experience. Also, more features are added and
+updates are frequent.
+
 Usage
 -----
 
