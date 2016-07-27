@@ -39,24 +39,28 @@ Whether you build the component, copy the raw source or use bower (see below),
 the end result should be included in your page and the module `sf.virtualScroll`
 included as a dependency:
 
-    angular.module('myModule', ['sf.virtualScroll']);
+```js
+angular.module('myModule', ['sf.virtualScroll']);
+```
 
 Then use the directive `sf-virtual-repeat` just as you would use `ng-repeat`.
 
-    <div class="viewport">
-      <div>
-        <table>
-          <tbody>
-            <tr sf-virtual-repeat="line in book.lines"><th>{{$index}}: <td>{{line}}
-        </table>
-      </div>
-    </div>
+```html
+<div class="viewport">
+  <div>
+    <table>
+      <tbody>
+        <tr sf-virtual-repeat="line in book.lines"><th>{{$index}}: <td>{{line}}
+    </table>
+  </div>
+</div>
 
-    <div class="viewport real">
-      <ul>
-        <li ng-repeat="thing in simpleList">{{thing}}</li>
-      </ul>
-    </div>
+<div class="viewport real">
+  <ul>
+    <li ng-repeat="thing in simpleList">{{thing}}</li>
+  </ul>
+</div>
+```
 
 If you want to expose the scroll postion (to simulate an `atEnd` event for
 example), use `ng-model` and you have access to the scroll properties.
@@ -96,12 +100,16 @@ grunt has 2 parts: the heavy lifting package `grunt` and the shell command
 `grunt-cli`. If you haven't already installed `grunt-cli` globally, do so now
 with:
 
-    sudo npm install -g grunt-cli
+```shell
+sudo npm install -g grunt-cli
+```
 
 To run the simple demo, install the npm dependencies for the build tools and go:
 
-    npm install
-    grunt demo
+```shell
+npm install
+grunt demo
+```
 
 You can now view the demo at http://localhost:8000/
 
@@ -115,7 +123,9 @@ repo containing just the built artifacts here:
 [angular-virtual-scroll-bower](https://github.com/stackfull/angular-virtual-scroll-bower).
 You can add the component to your project with:
 
-    bower install angular-virtual-scroll
+```shell
+bower install angular-virtual-scroll
+```
 
 Or by adding a line to your `component.json` file.
 
