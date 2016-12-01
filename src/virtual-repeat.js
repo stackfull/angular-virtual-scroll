@@ -188,6 +188,9 @@
         state.lowWater = state.lowWater || 100;
         // - The point at which we remove old elements
         state.highWater = state.highWater || 300;
+        // - Keep the scroll event from constantly firing
+        state.threshold = state.threshold || 1;
+        var lastFixPos = 0;
         // TODO: now watch the water marks
 
         setContentCss(dom.content);
@@ -264,16 +267,20 @@
           if( !rowHeight ){
             return;
           }
-          // Enter the angular world for the state change to take effect.
-          scope.$apply(function(){
-            state.firstVisible = Math.floor(evt.target.scrollTop / rowHeight);
-            state.visible = Math.ceil(dom.viewport[0].clientHeight / rowHeight);
-            $log.debug('scroll to row %o', state.firstVisible);
-            scrolledToBottom = evt.target.scrollTop + evt.target.clientHeight >= evt.target.scrollHeight;
-            recomputeActive();
-            $log.debug(' state is now %o', state);
-            $log.debug(' scrolledToBottom = %o', scrolledToBottom);
-          });
+          var diff = Math.abs(evt.target.scrollTop - lastFixPos);
+          if(diff > (state.threshold * rowHeight)){
+            // Enter the angular world for the state change to take effect.
+            scope.$apply(function(){
+              state.firstVisible = Math.floor(evt.target.scrollTop / rowHeight);
+              state.visible = Math.ceil(dom.viewport[0].clientHeight / rowHeight);
+              $log.debug('scroll to row %o', state.firstVisible);
+              var sticky = evt.target.scrollTop + evt.target.clientHeight >= evt.target.scrollHeight;
+              recomputeActive();
+              $log.debug(' state is now %o', state);
+              $log.debug(' sticky = %o', sticky);
+            });
+            lastFixPos = evt.target.scrollTop;
+          }
         }
 
         function sfVirtualRepeatWatchExpression(scope){
