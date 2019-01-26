@@ -19,8 +19,8 @@ paging. There were some excellent alternatives including some wrappers of
 jQuery grids, but nothing was using the `ng-repeat` pattern. I wrote a couple
 of articles explaining myself as I went along:
 
-  * http://blog.stackfull.com/2013/02/angularjs-virtual-scrolling-part-1/
-  * http://blog.stackfull.com/2013/03/angularjs-virtual-scrolling-part-2/
+  * https://stackfull.github.io/blog/2013/02/16/angularjs-virtual-scrolling-part-1.html
+  * https://stackfull.github.io/blog/2013/03/24/angularjs-virtual-scrolling-part-2.html
 
 There should be an online demo here: http://demo.stackfull.com/virtual-scroll/
 
